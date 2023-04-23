@@ -55,7 +55,7 @@
             <div class="user_card">
                 <div class="d-flex justify-content-center">
                     <div class="brand_logo_container">
-                        <img src="https://cdn.freebiesupply.com/logos/large/2x/pinterest-circle-logo-png-transparent.png" class="brand_logo" alt="Logo">
+                        <img src="./assets/images/logo.png" alt="Logo">
                     </div>
                 </div>
 
@@ -64,7 +64,7 @@
                     {
                     ?>
                     <div class="d-flex justify-content-center form_container">
-                    <form action="" method="POST">
+                    <form action="" method="POST" autocomplete="off">
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -104,7 +104,7 @@
                     } else {
                     ?>
                     <div class="d-flex justify-content-center form_container">
-                    <form method="POST" action="">
+                    <form method="POST" action="" autocomplete="off">
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -125,10 +125,7 @@
 
                 <div class="mt-4">
                     <div class="d-flex justify-content-center links text-white">
-                        Don't have an account? <a href="?sign-up=1" class="ml-2">Sign Up</a>
-                    </div>
-                    <div class="d-flex justify-content-center links">
-                        <a href="#" class="text-white">Forgot your password?</a>
+                        Don't have an account?  <a href="?sign-up=1" class="ml-2"> Sign Up</a>
                     </div>
                 </div>
                     <?php
@@ -156,7 +153,13 @@
                     ?>
                         <span class="bg-white text-danger text-center my-3">Invalid username or password!</span>
                     <?php
+                    } else if(isset($_GET['duplicate']) && $_GET['duplicate'] == 1)
+                    {
+                        ?>
+                            <span class="bg-white text-danger text-center my-3">There is already an account registered with that ID.</span>
+                        <?php
                     }
+
                 ?>
                 
             </div>
@@ -175,27 +178,31 @@
     require_once("./admin/inc/config.php");
 
     if(isset($_POST['sign_up_btn'])) {
-        $su_id_no = mysqli_real_escape_string($db, $_POST['su_id_no']);
-        $su_username = mysqli_real_escape_string($db, $_POST['su_username']);
-        $su_password = mysqli_real_escape_string($db, sha1($_POST['su_password']));
-        $su_retype_password = mysqli_real_escape_string($db, sha1($_POST['su_retype_password']));
-        $user_role = "voter";
+    $su_id_no = mysqli_real_escape_string($db, $_POST['su_id_no']);
+    $su_username = mysqli_real_escape_string($db, $_POST['su_username']);
+    $su_password = mysqli_real_escape_string($db, sha1($_POST['su_password']));
+    $su_retype_password = mysqli_real_escape_string($db, sha1($_POST['su_retype_password']));
+    $user_role = "voter";
 
+    // check if su_id_no already exists in the database
+    $query = mysqli_query($db, "SELECT * FROM users WHERE su_id_no = '".$su_id_no."'");
+    if(mysqli_num_rows($query) > 0) {
+        ?>
+        <script> location.assign("index.php?sign-up=1&duplicate=1"); </script>
+        <?php
+    } else {
         if($su_password == $su_retype_password) {
-
             mysqli_query($db, "INSERT INTO users (su_id_no, su_username, su_password, user_role) VALUES ('".$su_id_no."', '".$su_username."', '".$su_password."', '".$user_role."') ") or die(mysqli_error($db));
-
             ?>
             <script> location.assign("index.php?sign-up=1&registered=1"); </script>
-
             <?php
-
         } else {
             ?>
             <script> location.assign("index.php?sign-up=1&invalid=1"); </script>
             <?php
         }
-    } else if(isset($_POST['loginBtn'])) {
+    }
+} else if(isset($_POST['loginBtn'])) {
         $su_id_no = mysqli_real_escape_string($db, $_POST['su_id_no']);
         $su_password = mysqli_real_escape_string($db, sha1($_POST['su_password']));
 

@@ -25,6 +25,5 @@
 				<img src="../assets/images/logo.gif" width="80px" alt="">
 			</div>
 			<div class="col-11 my-auto">
-				<h3>ONLINE VOTING SYSTEM - <small> Welcome <?php echo $_SESSION['su_username'] ?></small></h3>
 			</div>
 		</div>
