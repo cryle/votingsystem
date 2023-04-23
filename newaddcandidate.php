@@ -143,7 +143,7 @@ if (isset($_GET['added'])) {
 
 	<script>
 	const DeleteData = (e_id) => {
-		let c = confirm("Are you sure you want to delete this election?");
+		let c = confirm("Are you sure you want to delete this candidate?");
 
 		if(c == true) {
 			location.assign("index.php?addCandidatePage=1&delete_id=" + e_id)
