@@ -61,25 +61,6 @@
 		</div>
 	</div>
 
-<script>
-	const CastVote = (election_id, customer_id, voters_id) => {
-		$.ajax({
-			type: "POST",
-			url: "inc/ajaxCalls.php",
-			data: "e_id=" + election_id + "&c_id=" + customer_id + "&v_id=" + voters_id,
-			success: function(response) {
-				
-				if(response == "success")
-				{
-					location.assign("index.php?voteCastede=1");
-				} else {
-					location.assign("index.php?voteNotCasted=1");
-				}
-			}
-		});		
-}
-</script>
-
 <?php
 	require_once("inc/footer.php");
 ?>

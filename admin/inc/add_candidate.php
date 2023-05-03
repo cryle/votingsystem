@@ -162,16 +162,13 @@ if (isset($_POST['addCandidateBtn'])) {
 	$image_size = $_FILES['candidate_photo']['size'];
 
 	if (in_array($candidate_photo_type, $allowed_types)) {
-		if (move_uploaded_file($candidate_photo_tmp_name, $candidate_photo)) {
 			mysqli_query($db, "INSERT INTO candidate_details 
 					(election_id, candidate_name, candidate_photo, candidate_details, inserted_by, inserted_on) 
 					VALUES 
 					('" . $election_id . "', '" . $candidate_name . "', '" . $candidate_photo . "', '" . $candidate_details . "', '" . $inserted_by . "', '" . $inserted_on . "')") or die(mysqli_error($db));
 
 			echo "<script>location.assign('index.php?addCandidatePage=1&added=1')</script>";
-		} else {
-			echo "<script>location.assign('index.php?addCandidatePage=1&failed=1')</script>";
-		}
+		
 	} else {
 		echo "<script>location.assign('index.php?addCandidatePage=1&invalidFile=1')</script>";
 	}
