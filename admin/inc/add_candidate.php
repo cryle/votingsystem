@@ -18,12 +18,6 @@ if (isset($_GET['added'])) {
 		Invalid file format!
 	</div>
 <?php
-} else if (isset($_GET['failed'])) {
-?>
-	<div class="alert alert-danger" role="alert">
-		Image upload failed!
-	</div>
-<?php
 } else if(isset($_GET['delete_id'])) {
 		$d_id = $_GET['delete_id'];
 		mysqli_query($db, "DELETE FROM candidate_details WHERE id = '".$d_id."' ") or die(mysqli_error($db));
@@ -73,7 +67,7 @@ if (isset($_GET['added'])) {
 				<input type="text" name="candidate_name" placeholder="Candidate Name" class="form-control" required>
 			</div>
 			<div class="form-group my-2">
-				<input type="file" name="candidate_photo" class="form-control" required>
+				<input type="file" name="candidate_photo" class="form-control">
 			</div>
 			<div class="form-group my-2">
 				<input type="text" name="candidate_details" placeholder="Candidate Details" class="form-control" required>

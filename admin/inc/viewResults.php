@@ -1,12 +1,13 @@
 <?php
-	$election_id = $_GET['viewResult'];
-
+	require_once("inc/header.php");
+	require_once("inc/navigation.php");
 ?>
-<div class="row my-3">
+
+	<div class="row my-3">
 		<div class="col-12">
 			<h3>Election Results</h3>
 			<?php
-				$fetchingActiveElections = mysqli_query($db, "SELECT * FROM election WHERE id = '".$election_id."' ") or die(mysqli_error($db));
+				$fetchingActiveElections = mysqli_query($db, "SELECT * FROM election WHERE status = 'Active'") or die(mysqli_error($db));
 				$totalActiveElections = mysqli_num_rows($fetchingActiveElections);
 
 				if($totalActiveElections > 0)
@@ -23,7 +24,7 @@
 								<tr>
 									<th>Photo</th>
 									<th>Candidate Details</th>
-									<th># of Votes</th>
+									<th>Number of Votes</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -45,7 +46,6 @@
 											<td><?php echo "<b>" . $candidateData['candidate_name'] . "</b><br />" . $candidateData['candidate_details']; ?></td>
 											<td><?php echo $totalVotes; ?></td>
 
-											
 										</tr>
 									<?php
 									}
@@ -58,72 +58,28 @@
 					echo "There is currently no election";
 				}
 			?>
-
-			<hr>
-			<h3>Voting Details</h3>
-					<?php
-						$fetchingVoteDetails = mysqli_query($db, "SELECT * FROM votings WHERE election_id = '".$election_id."' ") or die(mysqli_error($db));
-						$number_of_votes = mysqli_num_rows($fetchingVoteDetails);
-
-						if($number_of_votes > 0) {
-								$sno = 1;
-								?>
-								<table class="table">
-									<tr>
-										<th>ID No.</th>
-										<th>Voter Name</th>
-										<th>School ID No.</th>
-										<th>Voted To</th>
-										<th>Date</th>
-										<th>Time</th>
-									</tr>
-								<?php
-							while($data = mysqli_fetch_assoc($fetchingVoteDetails))
-							{
-								$voters_id = $data['voter_id'];
-								$candidate_id = $data['candidate_id'];
-								$fetchingUsername = mysqli_query($db, "SELECT * FROM users WHERE id = '".$voters_id."' ") or die(mysqli_error($db));
-								$isDataAvailable = mysqli_num_rows($fetchingUsername);
-								$userData = mysqli_fetch_assoc($fetchingUsername);
-
-								if($isDataAvailable > 0)
-								{
-									$username = $userData['su_username'];
-									$id_no = $userData['su_id_no'];
-								} else {
-									$username = "No_Data";
-									$username = $userData['su_username'];
-								}
-
-								$fetchingCandidateName = mysqli_query($db, "SELECT * FROM candidate_details WHERE id = '".$candidate_id."' ") or die(mysqli_error($db));
-								$isDataAvailable = mysqli_num_rows($fetchingCandidateName);
-								$candidateData = mysqli_fetch_assoc($fetchingCandidateName);
-
-								if($isDataAvailable > 0)
-								{
-									$candidate_name = $candidateData['candidate_name'];
-								} else {
-									$candidate_name = "No_Data";
-								}
-
-
-								?>
-									<tr>
-										<td><?php echo $sno++; ?></td>
-										<td><?php echo $username; ?></td>
-										<td><?php echo $id_no ?></td>
-										<td><?php echo $candidate_name; ?></td>
-										<td><?php echo $data['vote_date'] ?></td>
-										<td><?php echo $data['vote_time'] ?></td>
-									</tr>
-								<?php
-							}
-							echo "</table>";
-						} else {
-							echo "No one voted yet.";
-						}
-
-					?>
-
 		</div>
 	</div>
+
+<script>
+	const CastVote = (election_id, customer_id, voters_id) => {
+		$.ajax({
+			type: "POST",
+			url: "inc/ajaxCalls.php",
+			data: "e_id=" + election_id + "&c_id=" + customer_id + "&v_id=" + voters_id,
+			success: function(response) {
+				
+				if(response == "success")
+				{
+					location.assign("index.php?voteCastede=1");
+				} else {
+					location.assign("index.php?voteNotCasted=1");
+				}
+			}
+		});		
+}
+</script>
+
+<?php
+	require_once("inc/footer.php");
+?>

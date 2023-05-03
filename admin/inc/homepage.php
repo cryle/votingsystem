@@ -10,7 +10,6 @@
       				<th scope="col">Starting On</th>
       				<th scope="col">Ending On</th>
       				<th scope="col">Status</th>
-      				<th scope="col">Action</th>
     			</tr>
 			</thead>
   			<tbody>
@@ -33,8 +32,6 @@
   								<td><?php echo $row['starting_date']; ?></td>
   								<td><?php echo $row['ending_date']; ?></td>
   								<td><?php echo $row['status']; ?></td>
-  								<td>
-  									<a href="index.php?viewResult=<?php echo $election_id; ?>" class="btn btn-sm btn-success">View Results</a>  								</td>
   							</tr>
   						<?php
   						}
